@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProyectoHsj_alpha.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/Layout_admin.cshtml";
+}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+</style>
+
+<h1>Index</h1>
+
+
+
+<<div class="container mt-4">
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-dark">
+            <thead class="thead-light">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.NombreUsuario)</th>
+                    <th>@Html.DisplayNameFor(model => model.ApellidoUsuario)</th>
+                    <th>@Html.DisplayNameFor(model => model.CorreoUsuario)</th>
+                    <th>@Html.DisplayNameFor(model => model.ContraseniaUsuario)</th>
+                    <th>@Html.DisplayNameFor(model => model.TelefonoUsuario)</th>
+                    <th>@Html.DisplayNameFor(model => model.IdRolNavigation)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.NombreUsuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ApellidoUsuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CorreoUsuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ContraseniaUsuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TelefonoUsuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IdRolNavigation.IdRol)</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdUsuario" class="btn btn-warning btn-sm">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.IdUsuario" class="btn btn-info btn-sm">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdUsuario" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
