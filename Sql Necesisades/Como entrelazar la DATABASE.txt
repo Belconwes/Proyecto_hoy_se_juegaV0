@@ -1,0 +1,20 @@
+Aclaracion: En la instancia 'Database' colocar el nombre de la base de datos sin comillas.
+Aclaracion 2: En la instancia 'Server' colocar el nombre del servidor o el port/ip de la conexion o simplemente colocar 'local'.
+Dependiendo de la configuracion de su inicio en sql server
+WINDOWS AUTHENTICATION
+Scaffold-DbContext "Server=(local); DataBase="Insertar tu db"; Trusted_Connection=True; TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutPutDir Models
+------------------------------------------------------------------------------------
+SQL SERVER AUTHENTICATION    
+scaffold "Server=(local);Database=prueba;User Id=your_user;Password=your_password;" Microsoft.EntityFrameworkCore.SqlServer -o Models
+------------------------------------------------------------------------------------
+Chequear en Hoysejuegacontext que la cadena de conexion este comentada.
+Despues modificar
+program.cs:
+builder.Services.AddDbContext<PruebafContext>(Options =>
+{
+    Options.UseSqlServer(builder.Configuration.GetConnectionString("Colocar el nombre de tu conexion"));
+});
+
+y en appsettings.json:
+"ConnectionStrings": {
+  "Ponerle nombre a la conexion": "Server=(local); DataBase="Insertar tu db"; Trusted_Connection=True; TrustServerCertificate=True;"

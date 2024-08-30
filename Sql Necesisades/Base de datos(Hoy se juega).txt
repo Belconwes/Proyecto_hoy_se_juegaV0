@@ -1,0 +1,104 @@
+create database HOY_SE_JUEGA;
+GO
+USE HOY_SE_JUEGA
+GO
+
+CREATE TABLE REPORTE(
+    ID_reporte INT PRIMARY KEY,
+    Mes_Reporte TINYINT NOT NULL,
+    Anio_Reporte YEAR NOT NULL,
+    Usuarios_Registrados_Reporte INT NULL,
+    Reservas_Realizadas_Reporte INT NULL,
+    Fecha_De_Reporte DATATIME NOT NULL DEFAULT GETDATE()
+)
+
+create table USUARIO ( 
+    ID_usuario int identity primary key,
+    Nombre_Usuario VARCHAR(30) NOT NULL,
+    Apellido_Usuario VARCHAR(30) NOT NULL,
+    Correo_Usuario VARCHAR(100) UNIQUE NOT NULL,
+    Contrasenia_Usuario VARCHAR(256) NOT NULL,
+    Telefono_Usuario VARCHAR(15) NOT NULL,
+    ID_rol INT NOT NULL
+    FOREIGN KEY (ID_rol) REFERENCES ROL(ID_rol)
+)
+
+CREATE TABLE ROL(
+    ID_rol INT PRIMARY KEY,
+    Nombre_Rol VARCHAR(30) NOT NULL
+)
+
+CREATE TABLE PERMISO(
+    ID_permiso INT PRIMARY KEY,
+    Nombre_Permiso VARCHAR(30) NOT NULL
+)
+
+CREATE TABLE PERMISO_ROL(
+    ID_permiso INT,
+	ID_rol INT,
+    FOREIGN KEY (ID_permiso) REFERENCES PERMISO(ID_permiso),
+    FOREIGN KEY (ID_rol) REFERENCES ROL(ID_rol),
+PRIMARY KEY (ID_rol, ID_permiso)
+)
+
+CREATE TABLE AUDITORIA(
+    ID_auditoria INT PRIMARY KEY,
+    ID_usuario INT,
+    Fecha_Auditoria DATATIME NOT NULL DEFAULT GETDATE(),
+    Accion_Realizada VARCHAR(100) NOT NULL,
+    Descripcion_De_Accion VARCHAR(MAX) NOT NULL,
+    FOREIGN KEY(ID_usuario) REFERENCES USUARIO(ID_usuario)
+)
+
+CREATE TABLE CANCHA (
+    ID_cancha INT PRIMARY KEY,
+    Nombre_Cancha VARCHAR(30) NOT NULL,
+    Ubicacion_Cancha VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE HORARIO_DISPONIBLE (
+    ID_horario_disponible INT PRIMARY KEY,
+    ID_cancha INT NOT NULL,
+    Fecha_Horario DATE NOT NULL DEFAULT GETDATE(),
+    Hora_Inicio TIME NOT NULL,
+	Hora_Fin TIME NOT NULL,
+    Disponible_Horario BIT DEFAULT 1,
+    FOREIGN KEY (ID_cancha) REFERENCES CANCHA(ID_cancha)
+);
+
+CREATE TABLE RESERVA (
+    ID_reserva INT PRIMARY KEY,
+    ID_usuario INT NOT NULL,
+    ID_cancha INT NOT NULL,
+    ID_horario_disponible INT NOT NULL,
+    Fecha_Reserva DATE NOT NULL,
+	ID_estado_reserva INT NOT NULL,
+FOREIGN KEY (ID_estado_reserva) REFERENCES ESTADO_RESERVA(ID_estado_reserva),
+    FOREIGN KEY (ID_usuario) REFERENCES USUARIO(ID_usuario),
+    FOREIGN KEY (ID_cancha) REFERENCES CANCHA(ID_cancha),
+    FOREIGN KEY (ID_horario_disponible) REFERENCES HORARIO_DISPONIBLE(ID_horario_disponible)
+);
+
+CREATE TABLE ESTADO_RESERVA(
+    ID_estado_reserva INT PRIMARY KEY,
+    Nombre_Estado_Reserva VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE PAGO (
+    ID_pago INT PRIMARY KEY,
+    ID_reserva INT NOT NULL,
+    Monto_Pago DECIMAL(10, 2) NOT NULL,
+    Fecha_Pago DATETIME NOT NULL DEFAULT GETDATE(),
+    FOREIGN KEY (ID_reserva) REFERENCES RESERVA(ID_reserva)
+);
+
+CREATE TABLE NOTIFICACION (
+    ID_notificacion INT PRIMARY KEY,
+    ID_usuario INT NOT NULL,
+    ID_reserva INT NOT NULL,
+    Mensaje_Notificacion VARCHAR(200) NOT NULL,
+    Fecha_Envio_Notificacion DATETIME NOT NULL DEFAULT GETDATE(),
+    Titulo_Notificacion VARCHAR(30) NOT NULL,
+    FOREIGN KEY (ID_usuario) REFERENCES USUARIO(ID_usuario),
+    FOREIGN KEY (ID_reserva) REFERENCES RESERVA(ID_reserva)
+);
