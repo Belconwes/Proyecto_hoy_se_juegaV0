@@ -27,4 +27,22 @@ body {
     object-fit: cover;
     max-height: 500px;
 }
+/*footer*/
+footer {
+    background-color: #000; /* Fondo negro */
+    color: #fff; /* Texto blanco */
+    padding: 20px;
+    text-align: center;
+}
+
+    footer a {
+        color:#000000; /* Color de los enlaces */
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+        footer a:hover {
+            text-decoration: underline; /* Subrayado al pasar el ratón */
+        }
+
 

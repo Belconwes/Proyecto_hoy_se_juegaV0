@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center; /* Centra el navbar horizontalmente */
 }
+
 .lg {
     color: green;
     text-decoration: none; /* Elimina el subrayado del enlace */
@@ -15,8 +16,9 @@
     display: flex; /* Usa flexbox para alinear los ítems del navbar en una sola línea */
     justify-content: center; /* Centra los ítems dentro del navbar */
     background-color: #000000; /* Color de fondo del navbar */
-    border-radius: 5px; /* Bordes redondeados opcionales */
+    border-radius: 50px; /* Bordes redondeados en todo el navbar */
     width: auto; /* El ancho se ajusta automáticamente al contenido */
+    padding: 0.5rem 1rem; /* Espaciado interno para hacer el navbar más visible */
 }
 
 /* Estilo de los enlaces dentro del navbar */
@@ -39,6 +41,5 @@
 }
 
     .nav-link:hover {
-        background-color: #555; /* Color de fondo al pasar el mouse */
-        border-radius: 3px; /* Bordes redondeados al pasar el mouse */
+        background-color: aqua;
     }

@@ -38,8 +38,9 @@ namespace ProyectoHsj_alpha.Controllers
                 ViewData["Message"] = "Las contraseñas no coinciden";
                 return View();
             }
+            // Funcion traida de utilities para encryptar la contraseña.
             string hashedPassword = PasswordHasher.HashPassword(modelo.ContraseniaUsuario);
-            // Obtener el siguiente ID disponible manualmente
+            // Funcion para obtener el id manualmente. jijij
             int nuevoIdUsuario = _hoysejuegacontext.Usuarios.Any()
                 ? _hoysejuegacontext.Usuarios.Max(u => u.IdUsuario) + 1
                 : 1;
@@ -53,6 +54,9 @@ namespace ProyectoHsj_alpha.Controllers
                 CorreoUsuario = modelo.CorreoUsuario,
                 TelefonoUsuario = modelo.TelefonoUsuario,
                 ContraseniaUsuario = hashedPassword,
+                // Modificar el valor a (2/3) si es la primera vez ->
+                //  para poder tener acceso al panel de administracion
+                //  2 = admin / 3 = Empleado
                 IdRol = (1),
             };
             await _hoysejuegacontext.Usuarios.AddAsync(usuario);
@@ -84,6 +88,7 @@ namespace ProyectoHsj_alpha.Controllers
                 ViewData["Message"] = "No se encontro el usuario solicitado, por favor revise los campos a rellenar";
                 return View();
             }
+            //Auntenticacion via claims y cookies. jijij
 
             List<Claim> claims = new List<Claim>()
             {
