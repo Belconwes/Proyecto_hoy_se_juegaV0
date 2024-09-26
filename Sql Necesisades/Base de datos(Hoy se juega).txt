@@ -12,17 +12,6 @@ CREATE TABLE REPORTE(
     Fecha_De_Reporte DATATIME NOT NULL DEFAULT GETDATE()
 )
 
-create table USUARIO ( 
-    ID_usuario int identity primary key,
-    Nombre_Usuario VARCHAR(30) NOT NULL,
-    Apellido_Usuario VARCHAR(30) NOT NULL,
-    Correo_Usuario VARCHAR(100) UNIQUE NOT NULL,
-    Contrasenia_Usuario VARCHAR(256) NOT NULL,
-    Telefono_Usuario VARCHAR(15) NOT NULL,
-    ID_rol INT NOT NULL
-    FOREIGN KEY (ID_rol) REFERENCES ROL(ID_rol)
-)
-
 CREATE TABLE ROL(
     ID_rol INT PRIMARY KEY,
     Nombre_Rol VARCHAR(30) NOT NULL
@@ -41,6 +30,20 @@ CREATE TABLE PERMISO_ROL(
 PRIMARY KEY (ID_rol, ID_permiso)
 )
 
+create table USUARIO ( 
+    ID_usuario int identity primary key,
+    Nombre_Usuario VARCHAR(30) NOT NULL,
+    Apellido_Usuario VARCHAR(30) NOT NULL,
+    Correo_Usuario VARCHAR(100) UNIQUE NOT NULL,
+    Contrasenia_Usuario VARCHAR(256) NOT NULL,
+    Telefono_Usuario VARCHAR(15) NOT NULL,
+    ID_rol INT NOT NULL,
+    PasswordResetToken NVARCHAR(MAX) NULL,
+    PasswordResetTokenExpiry DATETIME NULL,
+    EmailConfirmationToken NVARCHAR(255) NULL,
+    EmailConfirmed BIT NULL,
+    FOREIGN KEY (ID_rol) REFERENCES ROL(ID_rol)
+)
 CREATE TABLE AUDITORIA(
     ID_auditoria INT PRIMARY KEY,
     ID_usuario INT,
