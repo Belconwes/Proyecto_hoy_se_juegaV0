@@ -21,7 +21,7 @@ public partial class HoySeJuegaContext : DbContext
 
     public virtual DbSet<EstadoReserva> EstadoReservas { get; set; }
 
-    public virtual DbSet<HorarioDisponible> HorarioDisponibles { get; set; }
+    public virtual DbSet<HorarioDisponible> HorariosDisponibles { get; set; }
 
     public virtual DbSet<Notificacion> Notificacions { get; set; }
 

@@ -13,4 +13,11 @@
     <li class="btn-custom" >
         <a  class="link-no-style" asp-controller="Usuarios" asp-action="Index" > Usuarios </a>
     </li>
+    @if(User.IsInRole("2"))
+    {
+        <li class="btn-custom">
+            <a class="link-no-style" asp-controller="Permisos" asp-action="ManageView"> Permisos </a>
+        </li>
+
+    }
 </ul>

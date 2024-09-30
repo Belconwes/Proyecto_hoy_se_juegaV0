@@ -4,7 +4,7 @@
         <title>
 
 
-
+            login
 
          </title>
     </head>
@@ -38,6 +38,11 @@
                                         Log In
                                     </button>
                                 </div>
+                                @if (ViewData["ShowResendLink"] != null && (bool)ViewData["ShowResendLink"])
+                                {
+                                    <p>¿No has confirmado tu correo? <a href="@Url.Action("resendEmail", "Acces", new { email = Model.CorreoUsuario })">Reenviar correo de confirmación</a></p>
+                                }
+
                                 @if (ViewData["Message"] != null)
                                 {
                                     <div class="alert alert-danger" role="alert">
@@ -48,6 +53,14 @@
 
                                 <p class="text-center text-muted mt-5 mb-0">
                                     Don't have an account? <a class="fw-bold text-body" asp-controller="Acces" asp-action="Signup"  ><u> Register here </u></a>
+                                </p>
+
+                                <p class="text-center text-muted mt-5 mb-0">
+                                    Te queres loguear por google? <a class="fw-bold text-body" asp-controller="Acces" asp-action="GoogleLogin"><u> Login here </u></a>
+                                </p>
+
+                                <p class="text-center text-muted mt-5 mb-0">
+                                    Sos boludo y te olvidaste la contraseña, como te dicen angel? <a class="fw-bold text-body" asp-controller="Account" asp-action="ForgotPassword"><u> CLICK aqui </u></a>
                                 </p>
 
                             </form>

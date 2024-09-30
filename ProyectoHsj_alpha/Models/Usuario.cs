@@ -21,7 +21,8 @@ public partial class Usuario
 
     public string? PasswordResetToken { get; set; } 
     public DateTime? PasswordResetTokenExpiry { get; set; }
-
+    public string? EmailConfirmationToken { get; set; } //Propiedad Integrada manualmente
+    public bool? EmailConfirmed { get; set; } = false; //Propiedad Integrada manualmente
     public virtual ICollection<Auditorium> Auditoria { get; set; } = new List<Auditorium>();
 
     public virtual Rol IdRolNavigation { get; set; } = null!;

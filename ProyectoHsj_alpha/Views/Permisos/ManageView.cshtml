@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ProyectoHsj_alpha.Models.Permiso>
+
+<h2>Permisos</h2>
+<a asp-action="Crear" class="btn btn-primary">Crear Nuevo Permiso</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre del Permiso</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var permiso in Model)
+            {
+                <tr>
+                    <td>@permiso.NombrePermiso</td>
+                    <td>
+                        <a asp-action="Editar" asp-route-id="@permiso.IdPermiso" class="btn btn-warning">Editar</a>
+                        <form asp-action="Eliminar" asp-route-id="@permiso.IdPermiso" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">No se encontraron permisos.</td>
+            </tr>
+        }
+    </tbody>
+   
+</table>
