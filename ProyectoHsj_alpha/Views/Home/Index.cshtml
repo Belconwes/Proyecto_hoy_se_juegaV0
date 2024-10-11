@@ -8,7 +8,7 @@
 </style>
 @if (User.IsInRole("2")) // Admin
 {
-    <p></p>
+    <p></p> 
 }
 <!-- Carrusel -->
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
@@ -47,19 +47,30 @@
 
 <!-- CSS personalizado -->
 <style>
+    /* Asegurarse de que el contenedor del carrusel ocupe todo el ancho */
+    .full-width-carousel {
+        width: 100vw; /* Ocupa todo el ancho de la ventana del navegador */
+        margin: 0; /* Eliminar márgenes */
+        padding: 0; /* Eliminar rellenos */
+        position: relative;
+    }
+
     .overlay {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Color negro con opacidad */
+        width: 200%;
+        height: 200%;
+        background-color: rgba(0, 0, 0, 0.5);
         z-index: 1;
     }
+    
 
     .carousel-item img {
         position: relative;
         z-index: 0;
+        width: 100%;
+        height: auto;
     }
 
     .btn-custom {
@@ -79,6 +90,13 @@
 
     .carousel-caption {
         z-index: 2;
+    }
+
+    /* Asegurarse de que no haya márgenes alrededor de la página */
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Evitar el scroll horizontal */
     }
 </style>
 

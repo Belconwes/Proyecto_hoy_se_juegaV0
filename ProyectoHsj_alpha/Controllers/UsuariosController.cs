@@ -19,7 +19,7 @@ namespace ProyectoHsj_alpha.Controllers
             _context = context;
         }
 
-        // GET: Usuarios
+        // Metodo Get
         public async Task<IActionResult> Index()
         {
             var hoySeJuegaContext = _context.Usuarios.Include(u => u.IdRolNavigation);

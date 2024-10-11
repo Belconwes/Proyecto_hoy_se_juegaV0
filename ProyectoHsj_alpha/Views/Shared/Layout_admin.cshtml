@@ -5,12 +5,32 @@
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>@ViewData["Title"] - Admin </title>
+          <!--Links de bootstraps integrados-->
             <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+            <!--Links de archivos css personalizados-->
             <link rel="stylesheet" href="~/css/site.css" />
              <link href="~/css/New.css" rel="stylesheet" />
             <link rel="stylesheet" href="~/css/StyleSheet.css" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
             <style>
+        .btn-custom {
+            position: relative; /* Necesario para que el <a> se ajuste al <li> */
+        }
+
+            .btn-custom a {
+                display: block; /* Esto hace que el enlace ocupe todo el área del <li> */
+                height: 100%; /* Hace que el enlace abarque toda la altura */
+                width: 100%; /* Hace que el enlace abarque todo el ancho */
+                text-align: center; /* Centra el texto dentro del botón */
+                padding: 10px; /* Ajusta el padding si es necesario */
+                color: inherit; /* Hace que el enlace herede el color de texto del <li> */
+                text-decoration: none; /* Quita el subrayado del enlace */
+            }
+
+            .btn-custom:hover {
+                background-color: black; /* Opcional: Añade un efecto hover */
+            }
                 #sidebar-wrapper {
                          width: 250px;
                          min-height: 100vh;
@@ -34,7 +54,7 @@
 
             </style>
         </head> 
-    <body>
+    <body class="bg-color" style="color:white">
         <div class="d-flex" id="wrapper">
             <!-- Sidebar -->
             <div class="bg-light border-right" id="sidebar-wrapper">
@@ -72,7 +92,9 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
         <!-- scripts integrados  -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
         <script>
             $("#menu-toggle").click(function (e) {

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using ProyectoHsj_alpha.Repositories;
 
 
 namespace ProyectoHsj_alpha.Controllers
@@ -18,11 +19,13 @@ namespace ProyectoHsj_alpha.Controllers
     {
         private readonly HoySeJuegaContext _hoysejuegacontext;
         private readonly IFluentEmail _fluentEmail;
+        private readonly IPermisoRepository _permisoRepository;
 
-        public AccesController(HoySeJuegaContext seJuegaContext, IFluentEmail fluentEmail)
+        public AccesController(HoySeJuegaContext seJuegaContext, IFluentEmail fluentEmail, IPermisoRepository permisoRepository)
         {
             _hoysejuegacontext = seJuegaContext;
             _fluentEmail = fluentEmail;
+            _permisoRepository = permisoRepository;
         }
         public IActionResult AccessDenied()
         {
@@ -42,6 +45,7 @@ namespace ProyectoHsj_alpha.Controllers
         }
 
         [HttpGet]
+        //Autenticacion de via google method :  GET
         public async Task<IActionResult> GoogleResponse( string remoteError = null)
         {
             if (remoteError != null)
@@ -51,7 +55,7 @@ namespace ProyectoHsj_alpha.Controllers
             }
             Console.WriteLine("Entro a la funcion Callback");
 
-            // Obtener información del usuario autenticado por Google
+            // Obtener información del usuario autenticado por Google iji
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (result?.Principal == null)
@@ -82,17 +86,17 @@ namespace ProyectoHsj_alpha.Controllers
 
             if (usuarioExistente == null)
             {
-                // Registrar nuevo usuario si no existe
+                // Registrar nuevo usuario si  es que no existe
                 Usuario nuevoUsuario = new Usuario
                 {
                     IdUsuario = nuevoIdUsuario,
                     CorreoUsuario = email,
                     NombreUsuario = nombre,
                     TelefonoUsuario = "1161938",
-                    ApellidoUsuario = "GoogleUser",  // Puedes asignar un valor por defecto o extraer más datos si están disponibles.
-                    ContraseniaUsuario = "123", // Al no haber contraseña, podrías dejarlo nulo o usar un valor temporal.
+                    ApellidoUsuario = "GoogleUser",  // Valor por defecto indicar al usuario que debe de modificar
+                    ContraseniaUsuario = "123", // .
                     EmailConfirmed = true, // Marcamos como confirmado porque Google valida los correos
-                    IdRol = 1 // Asignar el rol por defecto
+                    IdRol = 1 // Asignar el rol por defecto(Rol de usuario)
                 };
 
                 _hoysejuegacontext.Usuarios.Add(nuevoUsuario);
@@ -103,14 +107,14 @@ namespace ProyectoHsj_alpha.Controllers
             }
             else
             {
-                // Si el usuario ya existe, autenticarlo directamente
+                // Si el usuario ya existe, lo auntenticamos directamente
                 await SignInUser(usuarioExistente);
             }
 
             return RedirectToAction("Index", "Home");
         }
 
-
+        //Creacion de claims por medio del acceso de google
         private async Task SignInUser(Usuario usuario)
         {
             // Crear los claims para el usuario
@@ -159,7 +163,8 @@ namespace ProyectoHsj_alpha.Controllers
             }
             // Funcion traida de utilities para encryptar la contraseña.
             string hashedPassword = PasswordHasher.HashPassword(modelo.ContraseniaUsuario);
-            // Funcion para obtener el id manualmente. jijij
+
+            // Funcion para obtener el id manualmente.(Eliminar una vez tengan la base de datos actualizada)
             int nuevoIdUsuario = _hoysejuegacontext.Usuarios.Any()
                 ? _hoysejuegacontext.Usuarios.Max(u => u.IdUsuario) + 1
                 : 1;
@@ -202,12 +207,12 @@ namespace ProyectoHsj_alpha.Controllers
             ViewData["Message"] = "No se pudo registrar al usuario";
             return View();
         }
-
+        // View para indicar al usuario que su registro se completo y debe verificar su correo(Ayuda tengo depresion)
         public IActionResult RegistroExitoso()
         {
             return View();
         }
-
+        //Validar correo method post
         public async Task<IActionResult> ConfirmarCorreo(string token, string email)
         {
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
@@ -236,12 +241,14 @@ namespace ProyectoHsj_alpha.Controllers
         }
 
         [HttpGet]
+        //Controlador method : GET
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        //Controlador de Login method POST
         public async Task<IActionResult> Login(LoginVM modelo)
         {
             Usuario? usuario_found = await _hoysejuegacontext.Usuarios
@@ -262,6 +269,12 @@ namespace ProyectoHsj_alpha.Controllers
 
             }
 
+           
+            // Obtener permisos desde el rol del usuario(Se usara para dar las restricciones en base a permisos otorgados)
+            var permisos = await _permisoRepository.GetPermisosByRolIdAsync(usuario_found.IdRol);
+
+
+
             //Auntenticacion via claims y cookies. jijij
 
             List<Claim> claims = new List<Claim>()
@@ -270,6 +283,11 @@ namespace ProyectoHsj_alpha.Controllers
                 new Claim(ClaimTypes.Name, usuario_found.NombreUsuario),
                 new Claim(ClaimTypes.Role, usuario_found.IdRol.ToString())
             };
+
+            foreach (var permiso in permisos)
+            {
+                claims.Add(new Claim("Permiso", permiso.NombrePermiso)); // Tambien se puede colocar idPermiso (A preferencia)
+            }
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             AuthenticationProperties properties = new AuthenticationProperties()
             {
@@ -281,6 +299,11 @@ namespace ProyectoHsj_alpha.Controllers
                 properties
 
                 );
+
+            foreach (var claim in claims)
+            {
+                Console.WriteLine($"Claim: {claim.Type}, Value: {claim.Value}");
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -319,14 +342,14 @@ namespace ProyectoHsj_alpha.Controllers
             ViewData["Message"] = "Se ha reenviado el correo de confirmación.";
             return RedirectToAction("Login");
         }
-
+        //Logout
         public async Task<IActionResult> Cerrar()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Index", "Home");
         }
-
+        // A eliminar o a utilizar
         public IActionResult Index()
         {
             return View();

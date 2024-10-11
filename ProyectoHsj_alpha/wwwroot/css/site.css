@@ -18,9 +18,11 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  background-image:url('img/fondo 1.JPEG.jpg');
+    margin-bottom: 60px;
+    background-color: #1f2124
 }
+
+
 
 .carousel-item img {
     max-height: 500px;

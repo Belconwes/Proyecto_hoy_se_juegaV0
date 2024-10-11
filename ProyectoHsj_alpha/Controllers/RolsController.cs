@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ProyectoHsj_alpha.Attributes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,15 @@ namespace ProyectoHsj_alpha.Controllers
             _context = context;
         }
 
-        // GET: Rols
-        [Authorize(Policy = "AdminOnly")]
+        // View de rol
+    
+        [Permiso("block")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Rols.ToListAsync());
         }
 
-        // GET: Rols/Details/5
+        // Detalles de los roles
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

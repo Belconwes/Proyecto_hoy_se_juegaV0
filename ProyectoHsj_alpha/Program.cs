@@ -9,26 +9,28 @@ using FluentEmail.Smtp;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.Google;
 using ProyectoHsj_alpha.Services;
+using ProyectoHsj_alpha.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddScoped<ReservaService>();
+builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HoySeJuegaContext>(Options =>
 {
     Options.UseSqlServer(builder.Configuration.GetConnectionString("Conexion"));
 });
-
-// Contraseña de aplicacion smtp : dzur havz dgxu vtgd 
+// seteo de contraseña de aplicacion
+//  dotnet user-secrets set "smtp:Password" "dzur havz dgxu vtgd"
 builder.Services.AddFluentEmail(builder.Configuration["Smtp:Username"], "HoySeJuega")
     .AddSmtpSender(new SmtpClient(builder.Configuration["Smtp:Host"])
     {
         Port = int.Parse(builder.Configuration["Smtp:Port"]),
         Credentials = new NetworkCredential(
             builder.Configuration["Smtp:Username"],
-            builder.Configuration["smtp:Password"] // Asegúrate de que este nombre coincida con el usado en User Secrets
+            builder.Configuration["smtp:Password"] // seteada en dotnet user-secrets
         ),
         EnableSsl = true
     });
@@ -51,7 +53,11 @@ builder.Services.AddAuthentication(options =>
     )
 .AddGoogle(options =>
 {
+    // Setear los secrets para posteriormente usarlos en el builder (De lo posible hacerlo en la termianal de powershell )
+    //dotnet user-secrets set "Authentication:Google:ClientId" "925616110531-4n85qcuq48afgvi06sdp0qos60g2q8ph.apps.googleusercontent.com "
 
+    //dotnet user-secrets set "Authentication:Google:ClientSecret" "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 ”
+    
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     options.CallbackPath = new PathString("/Acces/ExternalLoginCallback");

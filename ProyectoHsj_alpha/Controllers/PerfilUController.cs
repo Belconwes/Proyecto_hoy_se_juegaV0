@@ -37,9 +37,32 @@ namespace ProyectoHsj_alpha.Controllers
             return View(usuario);
         }
 
-        public IActionResult Index()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Perfil(Usuario usuario)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _context.Usuarios.FindAsync(usuario.IdUsuario);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                // Actualiza solo los campos permitidos
+                existingUser.NombreUsuario = usuario.NombreUsuario;
+                existingUser.ApellidoUsuario = usuario.ApellidoUsuario;
+                existingUser.CorreoUsuario = usuario.CorreoUsuario;
+                existingUser.TelefonoUsuario = usuario.TelefonoUsuario;
+                // Puedes agregar aquí la lógica para actualizar la contraseña si es necesario
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Perfil");
+            }
+
+            return View(usuario);
         }
+
+        
     }
 }

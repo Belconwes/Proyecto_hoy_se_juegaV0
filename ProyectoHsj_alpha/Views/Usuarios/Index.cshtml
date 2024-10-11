@@ -12,11 +12,11 @@
 
 </style>
 
-<h1>Index</h1>
+<h1>USUARIOS</h1>
 
 
 
-<<div class="container mt-4">
+<div class="container mt-4">
     <p>
         <a asp-action="Create" class="btn btn-primary">Create New</a>
     </p>
@@ -44,13 +44,51 @@
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.IdUsuario" class="btn btn-warning btn-sm">Edit</a>
                             <a asp-action="Details" asp-route-id="@item.IdUsuario" class="btn btn-info btn-sm">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.IdUsuario" class="btn btn-danger btn-sm">Delete</a>
+                            
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                    data-id="@item.IdUsuario" data-nombre="@item.NombreUsuario">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body" style="color: black;">
+                        ¿Estás seguro de que deseas eliminar <span id="deleteObjectName"></span>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form id="deleteForm" method="post" asp-action="Delete">
+                            <input type="hidden" name="id" id="deleteId" />
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script>
+    // Script para capturar el ID y nombre del objeto a eliminar y mostrarlo en el modal
+    var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Botón que disparó el modal
+        var objectId = button.getAttribute('data-id'); // Extraer el ID del objeto
+        var objectName = button.getAttribute('data-nombre'); // Extraer el nombre del objeto
+        var inputId = document.getElementById('deleteId'); // Campo oculto en el form del modal
+        var objectNameSpan = document.getElementById('deleteObjectName'); // Span para mostrar el nombre del objeto
+
+        inputId.value = objectId; // Asignar el ID al campo oculto
+        objectNameSpan.textContent = objectName; // Mostrar el nombre en el modal
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

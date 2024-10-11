@@ -5,41 +5,56 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ProyectoHsj_alpha.Attributes;
 using Microsoft.AspNetCore.Authorization;
+using NuGet.Protocol;
+using ProyectoHsj_alpha.Repositories;
+using ProyectoHsj_alpha.ViewsModels;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ProyectoHsj_alpha.Controllers
 {
     public class PermisosController : Controller
     {
-        private readonly HoySeJuegaContext _hoySeJuegaContext;
-        public PermisosController(HoySeJuegaContext hoySeJuegaContext)
+        private readonly IPermisoRepository _permisoRepository;
+
+        public PermisosController(IPermisoRepository permisoRepository)
         {
-            _hoySeJuegaContext = hoySeJuegaContext;
+            _permisoRepository = permisoRepository;
         }
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> ManageView()
+
+        [HttpGet]
+        public async Task<IActionResult>ManageView()
         {
-            var permisos = await _hoySeJuegaContext.Permisos.ToListAsync();
-            if (permisos == null)
+            var permisos = await _permisoRepository.GetAllPermisosAsync();
+            Console.WriteLine($"Permisos obtenidos: {permisos?.Count()}");
+            // Usar el repositorio para obtener permisos
+            if (!permisos.Any())
             {
-                // Puedes lanzar una excepción o redirigir a una página de error
-                return NotFound("No se encontraron permisos.");
+                ViewData["Error"] = "No se encontraron permisos.";
             }
             return View(permisos);
-            
-        } 
-        // GET: PermisosController
-        public ActionResult Index()
-        {
-            return View();
         }
 
         // GET: PermisosController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var permiso = await _permisoRepository.GetPermisoByIdAsync(id.Value); // Usar el repositorio para obtener el permiso
+            if (permiso == null)
+            {
+                return NotFound();
+            }
+
+            return View(permiso);
         }
 
-        // GET: PermisosController/Create
+
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -48,58 +63,159 @@ namespace ProyectoHsj_alpha.Controllers
         // POST: PermisosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("NombrePermiso")] Permiso permiso)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _permisoRepository.AddPermisoAsync(permiso);
+                    return RedirectToAction("ManageView");
+                }
+                catch (Exception ex)
+                {
+                    ViewData["Error"] = "Ocurrió un problema al crear el permiso: " + ex.Message;
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return View(permiso);
         }
 
-        // GET: PermisosController/Edit/5
-        public ActionResult Edit(int id)
+        // Funcion edit de metodo GET
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var permiso = await _permisoRepository.GetPermisoByIdAsync(id);
+            if (permiso == null)
+            {
+                return NotFound();
+            }
+            return View(permiso);
         }
 
-        // POST: PermisosController/Edit/5
+        // Funcion edit de metodo POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, Permiso permiso)
+        {
+            if (id != permiso.IdPermiso)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _permisoRepository.UpdatePermisoAsync(permiso);
+                    return RedirectToAction("ManageView");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Error al actualizar el permiso: " + ex.Message);
+                }
+            }
+            return View(permiso);
+        }
+
+        // Funcion Eliminar de metodo GET
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var permiso = await _permisoRepository.GetPermisoByIdAsync(id);
+            if (permiso == null)
+            {
+                return NotFound();
+            }
+            return View(permiso);
+        }
+
+
+        // Funcion eliminar metodo post
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _permisoRepository.DeletePermisoAsync(id);
+                return RedirectToAction("ManageView");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", "Error al eliminar el permiso: " + ex.Message);
+                return RedirectToAction("ManageView");
             }
         }
 
-        // GET: PermisosController/Delete/5
-        public ActionResult Delete(int id)
+        // Funcion para asignar permisos a un rol
+        [HttpGet]
+        public async Task<IActionResult> AsignarPermisosARol(int idRol)
         {
-            return View();
-        }
+            var viewModel = new OtorgarPViewModel
+            {
+                IdRolSeleccionado = idRol,
+                Roles = (await _permisoRepository.GetAllRolesAsync()).Select(r => new SelectListItem
+                {
+                    Value = r.IdRol.ToString(),   // El valor debe ser un string
+                    Text = r.NombreRol            // El texto visible en el dropdown
+                }).ToList(),  // Convierte la lista de roles a SelectListItem
 
-        // POST: PermisosController/Delete/5
+                Permisos = (await _permisoRepository.GetAllPermisosAsync()).Select(p => new PermisoCheckBoxViewModel
+                {
+                    IdPermiso = p.IdPermiso,
+                    NombrePermiso = p.NombrePermiso,
+                    Asignado = false // Inicialmente, ningún permiso está asignado
+                }).ToList() // Obtener los permisos como antes
+
+             
+            };
+
+
+
+            // Obtener los permisos ya asignados al rol
+            var permisosAsignados = await _permisoRepository.GetPermisosByRolIdAsync(idRol);
+
+            // Actualizar el estado de los permisos asignados en el ViewModel
+            viewModel.Permisos = viewModel.Permisos.Select(p => new PermisoCheckBoxViewModel
+            {
+                IdPermiso = p.IdPermiso,
+                NombrePermiso = p.NombrePermiso,
+                Asignado = permisosAsignados.Any(pa => pa.IdPermiso == p.IdPermiso) // Aquí se marcan los permisos asignados
+            }).ToList();
+
+            return View(viewModel);
+
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> AsignarPermisosARol(OtorgarPViewModel model)
         {
+            Console.WriteLine("Ids de permisos seleccionados antes del try: " + string.Join(", ", model.Permisos.Where(p => p.Asignado).Select(p => p.IdPermiso)));
             try
             {
-                return RedirectToAction(nameof(Index));
+                // Obtener los IDs de los permisos seleccionados (los checkboxes que están marcados)
+                var permisosSeleccionados = model.Permisos
+                                                   .Where(p => p.Asignado) // Solo los permisos que están asignados
+                                                   .Select(p => p.IdPermiso)
+                                                   .ToList();
+                Console.WriteLine("Ids de permisos seleccionados controlador : " + string.Join(", ", permisosSeleccionados));
+                // Asignar los permisos al rol
+                Console.WriteLine("Iniciando asignación de permisos fase controlador...");
+                await _permisoRepository.AsignarPermisosARolAsync(model.IdRolSeleccionado, permisosSeleccionados);
+                
+
+                Console.WriteLine("Permisos asignados correctamente.");
+                // Redireccionar a la vista de roles
+                Console.WriteLine("Paso por aca");
+                return RedirectToAction("Index", "Rols");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine("Paso por aca 2");
+                // Si hay un error, muestra un mensaje
+                ModelState.AddModelError("", "Error al asignar permisos: " + ex.Message);
+                return View(model);
             }
         }
+
     }
 }

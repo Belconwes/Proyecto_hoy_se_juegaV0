@@ -23,12 +23,13 @@ namespace ProyectoHsj_alpha.Controllers
             _context = context;
             _fluentEmail = fluentEmail;
         }
+        //Renderizar el las vista de ForgotPassword method : GET
         [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
-
+        //Tomar valores de los inputs desde la vista ForgotPassword methos : POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -64,12 +65,12 @@ namespace ProyectoHsj_alpha.Controllers
             // Mostrar mensaje de que el email fue enviado
             return RedirectToAction("ForgotPasswordConfirmation");
         }
-
+        //Renderiza vista de que el correo introducido es correcto  method : GET
         public IActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
-
+        //Renderiza la vista para resetear o restrablecer/cambiar la contraseña method : GET
         public IActionResult ResetPassword(string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -78,7 +79,7 @@ namespace ProyectoHsj_alpha.Controllers
             var model = new ResetPasswordViewModel { Token = token };
             return View(model);
         }
-
+        // Envia los datos a la base de datos method : POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
@@ -104,7 +105,7 @@ namespace ProyectoHsj_alpha.Controllers
             return RedirectToAction("ResetPasswordConfirmation");
         }
 
-        // GET: /Account/ResetPasswordConfirmation
+        // Renderiza la vista indicando el correcto reseteo de la contraseña,
         public IActionResult ResetPasswordConfirmation()
         {
             return View();

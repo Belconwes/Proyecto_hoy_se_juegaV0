@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoHsj_alpha.Models;
 using ProyectoHsj_alpha.Services;
+
 namespace ProyectoHsj_alpha.Controllers
 {
     public class ReservaController : Controller
     {
         private readonly ReservaService _reservaService;
-         public ReservaController(ReservaService reservaService)
+
+        public ReservaController(ReservaService reservaService)
         {
             _reservaService = reservaService;
         }
 
         [HttpGet]
-        public IActionResult Crear()
+        public IActionResult ReservaView()
         {
             ViewData["Canchas"] = _reservaService.ObtenerCanchas();
             return View();
@@ -43,12 +45,19 @@ namespace ProyectoHsj_alpha.Controllers
             ViewData["Canchas"] = _reservaService.ObtenerCanchas();
             return View(reserva);
         }
-    
 
-
-      public IActionResult ReservaView()
+        [HttpGet]
+        public IActionResult Index()
         {
-            return View();
+            var reservas = _reservaService.ObtenerReservas();
+            return View(reservas);
+        }
+
+        public IActionResult Eliminar(int id)
+        {
+            _reservaService.EliminarReserva(id);
+            TempData["Mensaje"] = "Reserva eliminada exitosamente.";
+            return RedirectToAction("Index");
         }
     }
 }

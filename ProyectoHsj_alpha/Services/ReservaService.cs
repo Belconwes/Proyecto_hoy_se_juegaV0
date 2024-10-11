@@ -23,13 +23,18 @@ namespace ProyectoHsj_alpha.Services
         // Obtener los horarios disponibles para una fecha y cancha específica
         public List<HorarioDisponible> ObtenerHorariosDisponibles(int canchaId, DateTime fecha)
         {
-            // Lógica para obtener los horarios disponibles, por ejemplo:
+            var reservas = _context.Reservas
+                .Where(r => r.IdCancha == canchaId && r.FechaReserva == DateOnly.FromDateTime(fecha))
+                .Select(r => r.IdHorarioDisponible)
+                .ToList();
+
+            // Obtener todos los horarios disponibles que no están reservados
             return _context.HorariosDisponibles
-                           .Where(h => h.IdCancha == canchaId && h.FechaHorario == DateOnly.FromDateTime(fecha))
+                           .Where(h => h.IdCancha == canchaId && h.FechaHorario == DateOnly.FromDateTime(fecha) && !reservas.Contains(h.IdCancha))
                            .ToList();
         }
 
-           // Crear una nueva reserva
+        // Crear una nueva reserva
         public bool CrearReserva(Reserva nuevaReserva)
         {
             try
@@ -38,8 +43,10 @@ namespace ProyectoHsj_alpha.Services
                 _context.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // Aquí puedes registrar el error en un log
+                Console.WriteLine($"Error al crear la reserva: {ex.Message}");
                 return false;
             }
         }
@@ -47,9 +54,33 @@ namespace ProyectoHsj_alpha.Services
         // Verificar si ya existe una reserva para el mismo horario y cancha
         public bool ExisteReserva(int canchaId, DateTime fecha, int horarioId)
         {
-            return _context.Reservas.Any(r => r.IdCancha == canchaId && r.FechaReserva == DateOnly.FromDateTime(fecha) && r.IdHorarioDisponible == horarioId);
+            return _context.Reservas.Any(r =>
+                r.IdCancha == canchaId &&
+                r.FechaReserva == DateOnly.FromDateTime(fecha) &&
+                r.IdHorarioDisponible == horarioId);
+        }
+
+        // Obtener todas las reservas
+        public List<Reserva> ObtenerReservas()
+        {
+            return _context.Reservas.ToList();
+        }
+
+        // Obtener una reserva por ID
+        public Reserva ObtenerReservaPorId(int id)
+        {
+            return _context.Reservas.Find(id);
+        }
+
+        // Eliminar una reserva
+        public void EliminarReserva(int id)
+        {
+            var reserva = ObtenerReservaPorId(id);
+            if (reserva != null)
+            {
+                _context.Reservas.Remove(reserva);
+                _context.SaveChanges();
+            }
         }
     }
-
-    
 }
