@@ -6,7 +6,7 @@ GO
 CREATE TABLE REPORTE(
     ID_reporte INT PRIMARY KEY,
     Mes_Reporte TINYINT NOT NULL,
-    Anio_Reporte YEAR NOT NULL,
+    Anio_Reporte int NOT NULL,
     Usuarios_Registrados_Reporte INT NULL,
     Reservas_Realizadas_Reporte INT NULL,
     Fecha_De_Reporte DATETIME NOT NULL DEFAULT GETDATE()
@@ -16,6 +16,11 @@ CREATE TABLE ROL(
     ID_rol INT PRIMARY KEY,
     Nombre_Rol VARCHAR(30) NOT NULL
 )
+-- Insertar los roles básicos con IDs específicos
+INSERT INTO ROL (ID_rol, Nombre_Rol) VALUES 
+(1, 'Admin'),
+(2, 'Employed'),
+(3, 'User');
 
 CREATE TABLE PERMISO(
     ID_permiso INT PRIMARY KEY,
@@ -69,6 +74,11 @@ CREATE TABLE HORARIO_DISPONIBLE (
     FOREIGN KEY (ID_cancha) REFERENCES CANCHA(ID_cancha)
 );
 
+CREATE TABLE ESTADO_RESERVA(
+    ID_estado_reserva INT PRIMARY KEY,
+    Nombre_Estado_Reserva VARCHAR(20) NOT NULL
+);
+
 CREATE TABLE RESERVA (
     ID_reserva INT PRIMARY KEY,
     ID_usuario INT NOT NULL,
@@ -82,10 +92,7 @@ FOREIGN KEY (ID_estado_reserva) REFERENCES ESTADO_RESERVA(ID_estado_reserva),
     FOREIGN KEY (ID_horario_disponible) REFERENCES HORARIO_DISPONIBLE(ID_horario_disponible)
 );
 
-CREATE TABLE ESTADO_RESERVA(
-    ID_estado_reserva INT PRIMARY KEY,
-    Nombre_Estado_Reserva VARCHAR(20) NOT NULL
-);
+
 
 CREATE TABLE PAGO (
     ID_pago INT PRIMARY KEY,
