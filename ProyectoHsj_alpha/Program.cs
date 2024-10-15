@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ReservaService>();
 builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<HoySeJuegaContext>(Options =>
 {
     Options.UseSqlServer(builder.Configuration.GetConnectionString("Conexion"));
@@ -90,8 +91,17 @@ app.UseRouting();
 app.UseAuthentication(); // Ensure authentication middleware is added
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+// Registrar rutas de MVC y API
+app.UseEndpoints(endpoints =>
+{
+    // Rutas de los controladores MVC
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    // Rutas de los controladores API
+    endpoints.MapControllers();
+});
+
 
 app.Run();

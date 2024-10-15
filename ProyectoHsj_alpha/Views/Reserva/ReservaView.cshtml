@@ -1,30 +1,61 @@
 ﻿@{
     Layout = null;
 }
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-@model List<ProyectoHsj_alpha.Models.Reserva>
+<head>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js'></script>
+    <style>
+        /* Estilos para el calendario */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7; /* Fondo ligero para contraste */
+        }
 
-<h2>Reservas</h2>
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-@if (TempData["Mensaje"] != null)
-{
-    <div class="alert alert-success">@TempData["Mensaje"]</div>
-}
+        #calendar {
+            max-width: 100%; /* Hace que el calendario ocupe todo el ancho disponible */
+            margin: 0 auto; /* Centra el calendario */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Sombra */
+            border-radius: 8px; /* Bordes redondeados */
+        }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Cancha</th>
-            <th>Fecha</th>
-            <th>Horario</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-       Aca haces tu reserva
-    </tbody>
-</table>
+        /* Ajustes para pantallas más pequeñas */
+        
+    </style>
+</head>
 
-<a asp-controller="Reserva" asp-action="Crear" class="btn btn-primary">Crear Reserva</a>
+<body>
+    <h2>Reservas de Canchas</h2>
+    <div id='calendar'></div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Vista inicial del calendario
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                selectable: true,
+                select: function(info) {
+                    // Aquí puedes manejar la selección de la fecha
+                    alert('Fecha seleccionada: ' + info.startStr + ' a ' + info.endStr);
+                },
+                events: [], // Aquí puedes cargar eventos desde el servidor si es necesario
+            });
+            calendar.render(); // Renderiza el calendario al cargar
+        });
+    </script>
+</body>

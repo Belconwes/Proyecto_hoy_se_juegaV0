@@ -8,13 +8,13 @@
 <h1> ROLES </h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Nuevo Rol</a>
 </p>
 <table class="table table-striped table-bordered table-dark">
     <thead class="thead-light">
         <tr>
             <th>@Html.DisplayNameFor(model => model.NombreRol)</th>
-            <th>Actions</th>
+            <th>Acción</th>
         </tr>
     </thead>
     <tbody>
@@ -23,12 +23,12 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.NombreRol)</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdRol" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.IdRol" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdRol" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.IdRol" class="btn btn-info btn-sm">Detalle</a>
                     <a asp-controller="Permisos" asp-action="AsignarPermisosARol" asp-route-idRol="@item.IdRol" class="btn btn-success btn-sm">Asignar Permisos</a>
                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
                             data-id="@item.IdRol" data-nombre="@item.NombreRol">
-                        Delete
+                        Eliminar
                     </button>
                 </td>
             </tr>

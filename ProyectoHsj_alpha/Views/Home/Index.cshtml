@@ -2,13 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 <style>
-    p{
-        color:aliceblue
+    p {
+        color: aliceblue
     }
 </style>
 @if (User.IsInRole("2")) // Admin
 {
-    <p></p> 
+    <p></p>
 }
 <!-- Carrusel -->
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
@@ -49,9 +49,9 @@
 <style>
     /* Asegurarse de que el contenedor del carrusel ocupe todo el ancho */
     .full-width-carousel {
-        width: 100vw; /* Ocupa todo el ancho de la ventana del navegador */
-        margin: 0; /* Eliminar márgenes */
-        padding: 0; /* Eliminar rellenos */
+        width: 100vw; /* Usar 100vw para ocupar todo el ancho de la viewport */
+        margin: 0; /* Eliminar todos los márgenes */
+        padding: 0;
         position: relative;
     }
 
@@ -59,18 +59,16 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 200%;
-        height: 200%;
+        width: 100%; /* Ajustar el ancho al 100% */
+        height: 100%; /* Ajustar la altura al 100% */
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1;
     }
-    
 
     .carousel-item img {
-        position: relative;
-        z-index: 0;
         width: 100%;
         height: auto;
+        object-fit: cover;
     }
 
     .btn-custom {
@@ -100,49 +98,78 @@
     }
 </style>
 
+
 <!-- Nuevo apartado debajo del carrusel -->
 <section class="photo-text-section">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <img src="~/css/img/gosfps.jpg" alt="Descripción de la foto" class="img-fluid">
+                <img src="~/css/img/cumples.jpeg" alt="Celebración de cumpleaños en la cancha de fútbol" class="img-fluid">
             </div>
             <div class="col-md-6">
-                <h2>Cumples </h2>
+                <h2>Cumpleaños</h2>
                 <p>
-                    🎉⚽ ¡Celebra el cumpleaños de tu hijo con un partido inolvidable en nuestra cancha de fútbol 5! ⚽🎉
-                    🔹 Espacio Ideal: Disfruta de una cancha de primer nivel, ideal para que los niños corran, jueguen y celebren en grande.
-                    🔹 Diversión Garantizada: Con un ambiente seguro y amigable, nuestros campos están diseñados para que los niños se diviertan mientras juegan el deporte que más les gusta.
+                    🎉⚽ ¡Celebra tu cumpleaños con un emocionante partido en nuestra cancha de fútbol 5! ⚽🎉<br>
+                    🔹 Espacio Ideal🔹 Disfruta de una cancha de primer nivel, perfecta para que corran, jueguen y celebren en grande.<br>
+                    🔹 Diversión Garantizada 🔹 Con un ambiente seguro y amigable, nuestros campos están diseñados para que todos se diviertan mientras juegan el deporte que más les gusta.<br>
+                    🔹 ¡Contáctanos!🔹 Para más información y reservas.
+                <p>  <a href="https://wa.me/5491122760377" target="_blank"><i class="fa-brands fa-whatsapp"></i> envíanos un mensaje por WhatsApp.</a></p>
+
                 </p>
-                <style>
-                    .photo-text-section {
-                        background-color: black; /* Fondo negro */
-                        padding: 40px 0; /* Ajusta el padding según sea necesario */
-                        position: relative;
-                        left: 0;
-                        right: 0;
-                        margin-left: calc(-50vw + 50%);
-                        margin-right: calc(-50vw + 50%);
-                        width: 100vw; /* Asegura que el fondo ocupe todo el ancho de la pantalla */
-                        box-sizing: border-box; /* Incluye padding y border en el ancho total */
-                    }
-                </style>
             </div>
         </div>
     </div>
+    <style>
+        .photo-text-section {
+            background-color: black; /* Fondo negro */
+            padding: 40px 0; /* Ajusta el padding según sea necesario */
+            position: relative;
+            left: 0;
+            right: 0;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            width: 100vw; /* Asegura que el fondo ocupe todo el ancho de la pantalla */
+            box-sizing: border-box; /* Incluye padding y border en el ancho total */
+        }
+
+            /* Aplica estilo al título */
+            .photo-text-section h2 {
+                color: #FFD700; /* Color dorado */
+                font-size: 2.5em;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para resaltar */
+                margin-bottom: 20px;
+            }
+
+            /* Aplica estilo al párrafo */
+            .photo-text-section p {
+                color: #FFFFFF; /* Color blanco */
+                font-size: 1.2em;
+                line-height: 1.5;
+                margin-bottom: 0;
+            }
+    </style>
 </section>
+
 
 <section class="photo-text-section2">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h2>Grabamos tu partido</h2>
+                <h2 class="section-title">
+                    Grabamos tu partido
+                </h2>
                 <p>
-                    REVIVE TU PARTIDO CON LAS CAMARAS DE BEELUP
+                    📷⚽ Revive cada momento de la acción con las cámaras de <a href="https://beelup.com/ar/" target="_blank" style="color: #FFD700; text-decoration: none;">Beelup <i class="bi bi-display"></i></a>. Un servicio que te permite disfrutar de una grabación de alta calidad de tu partido, asegurando que no te pierdas ni un solo detalle de tus jugadas, goles y celebraciones. Ya sea que estés jugando con amigos, las cámaras capturan la emoción y el espíritu del juego desde diferentes ángulos.
+                </p>
+
+
+                <p>
+                    Además, podrás compartir los mejores momentos con tus compañeros y familiares a través de la plataforma digital. Con Beelup, no solo guardas recuerdos, sino que también puedes analizar tu rendimiento y mejorar en cada partido. ¡Haz que cada juego cuente y dale vida a tus mejores momentos con nuestras grabaciones!📷⚽
                 </p>
             </div>
             <div class="col-md-6">
-                <img src="~/css/img/gosfps.jpg" alt="Descripción de la foto" class="img-fluid">
+                <img src="~/css/img/beelup.jpeg" alt="Descripción de la foto" class="img-fluid">
             </div>
         </div>
     </div>
@@ -157,6 +184,23 @@
             margin-right: calc(-50vw + 50%);
             width: 100vw; /* Asegura que el fondo ocupe todo el ancho de la pantalla */
             box-sizing: border-box; /* Incluye padding y border en el ancho total */
+        }
+
+        /* Estilo del título de la sección */
+        .section-title {
+            color: #FFD700; /* Color dorado */
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para resaltar */
+            margin-bottom: 20px;
+        }
+
+        /* Aplica estilo al párrafo */
+        .photo-text-section2 p {
+            color: #FFFFFF; /* Color blanco */
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin-bottom: 0;
         }
     </style>
 </section>
