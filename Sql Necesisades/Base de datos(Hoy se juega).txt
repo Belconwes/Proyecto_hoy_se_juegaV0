@@ -9,7 +9,7 @@ CREATE TABLE REPORTE(
     Anio_Reporte YEAR NOT NULL,
     Usuarios_Registrados_Reporte INT NULL,
     Reservas_Realizadas_Reporte INT NULL,
-    Fecha_De_Reporte DATATIME NOT NULL DEFAULT GETDATE()
+    Fecha_De_Reporte DATETIME NOT NULL DEFAULT GETDATE()
 )
 
 CREATE TABLE ROL(
@@ -31,7 +31,7 @@ PRIMARY KEY (ID_rol, ID_permiso)
 )
 
 create table USUARIO ( 
-    ID_usuario int identity primary key,
+    ID_usuario int primary key,
     Nombre_Usuario VARCHAR(30) NOT NULL,
     Apellido_Usuario VARCHAR(30) NOT NULL,
     Correo_Usuario VARCHAR(100) UNIQUE NOT NULL,
@@ -47,7 +47,7 @@ create table USUARIO (
 CREATE TABLE AUDITORIA(
     ID_auditoria INT PRIMARY KEY,
     ID_usuario INT,
-    Fecha_Auditoria DATATIME NOT NULL DEFAULT GETDATE(),
+    Fecha_Auditoria DATETIME NOT NULL DEFAULT GETDATE(),
     Accion_Realizada VARCHAR(100) NOT NULL,
     Descripcion_De_Accion VARCHAR(MAX) NOT NULL,
     FOREIGN KEY(ID_usuario) REFERENCES USUARIO(ID_usuario)
