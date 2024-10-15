@@ -5,4 +5,4 @@ Microsoft.AspNetCore.Identity.EntityFrameworkCore // Todavia no esta en uso
 Microsoft.EntityFrameworkCore
 Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Tools
-
+Microsoft.Asp.NetCore.Authentication.Google
